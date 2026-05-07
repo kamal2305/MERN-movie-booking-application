@@ -1,7 +1,9 @@
 # Project Audit Report: MERN Movie Booking Application
 
+**Last updated:** 2026-05-07
+
 ## Summary
-The project was audited for security, code quality, and structural integrity. Several critical and high-priority issues were identified, primarily related to data leakage, authentication handling, and deprecated library usage. All identified issues have been addressed.
+The project was audited for security, code quality, and structural integrity. Several critical and high-priority issues were identified, primarily related to data leakage, authentication handling, and deprecated library usage. Most identified issues have been addressed; a short list of follow-up items remains.
 
 ## Findings & Fixes
 
@@ -47,8 +49,14 @@ The project was audited for security, code quality, and structural integrity. Se
 - **Location:** `src/App.js`
 - **Fix:** Implemented conditional route rendering based on Redux login state to protect sensitive pages.
 
-## Status: Production Ready
-All critical security issues have been resolved. The application structure is now more robust and follows best practices for a MERN stack.
+## Status: Production Ready (with follow-ups)
+All critical security issues have been resolved and fixes are merged. Remaining follow-ups are listed below.
+
+### Follow-up actions
+- Add a global error handling middleware to `app.js` to return consistent JSON errors.
+- Add `.env.example` to the repo root (verify `JWT_SECRET` / `SECRET_KEY` naming consistency).
+- Add automated tests for authentication and booking flows (unit & integration).
+- Add CI pipeline for linting, tests, and security checks.
 
 > [!TIP]
-> Consider implementing a global error handling middleware in `app.js` to catch all errors passed to `next(err)` and return a consistent JSON response.
+> Implement the global error handler early — it simplifies debugging and ensures consistent API responses.

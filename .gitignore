@@ -32,3 +32,8 @@ Thumbs.db
 # Other
 .gemini/
 coverage/
+
+# Ignore internal docs (keep README.md tracked)
+AUDIT_REPORT.md
+BUGS_FIXED.md
+!README.md
