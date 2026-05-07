@@ -1,15 +1,17 @@
 import { Box, Button, Checkbox, FormLabel, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react';
 import { addMovie } from '../../api-helpers/api-helpers';
+import { useNavigate } from 'react-router-dom';
 const labelProps = {
   mt: 1,
   mb: 1,
 }
 const AddMovies = () => {
+  const navigate = useNavigate();
   const [inputs, setInputs] = useState({
     title: "",
     description: "",
-    PosterUrl: "",
+    posterUrl: "",
     releaseDate: "",
     featured: false,
   });
@@ -23,10 +25,26 @@ const AddMovies = () => {
 
   const handleSubmit = (e) => { 
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Please login as admin first");
+        return;
+    }
+    if (!inputs.title || !inputs.description || !inputs.posterUrl || !inputs.releaseDate || actors.length === 0) {
+        alert("Please fill all fields and add at least one actor");
+        return;
+    }
     console.log(inputs, actors);
     addMovie({ ...inputs, actors })
-      .then(res => console.log(res))
-    .catch(err => console.log(err));
+      .then(res => {
+        console.log(res);
+        alert("Movie added successfully!");
+        navigate("/movies");
+      })
+      .catch(err => {
+        console.log(err);
+        alert("Failed to add movie!");
+      });
   }
   
   return (
@@ -62,7 +80,7 @@ const AddMovies = () => {
           <FormLabel sx={labelProps}>
             PosterUrl
           </FormLabel>
-          <TextField value={inputs.PosterUrl} onChange={handleChange} name="posterUrl" variant='standard'
+          <TextField value={inputs.posterUrl} onChange={handleChange} name="posterUrl" variant='standard'
             margin='normal'
           />
           <FormLabel sx={labelProps}>
@@ -107,7 +125,7 @@ const AddMovies = () => {
             sx={{ mr: 'auto' }}
           />
           <Button
-            type='sumbit'
+            type='submit'
             
             variant='contained'
             sx={{

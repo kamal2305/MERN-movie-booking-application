@@ -3,9 +3,11 @@ const { addMovie, getAllMovies, getMovieById } = require ("../controllers/movie-
 const movieRouter = express.Router();
 
 
+const authMiddleware = require("../utils/auth");
+
 movieRouter.get("/", getAllMovies);
 movieRouter.get("/:id", getMovieById);
-movieRouter.post("/", addMovie);
+movieRouter.post("/", authMiddleware, addMovie);
 
 
 module.exports = movieRouter;

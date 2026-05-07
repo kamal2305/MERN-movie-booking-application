@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+jest.mock('axios');
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+import { store } from './Store';
+
+test('initial auth state is logged out', () => {
+  const state = store.getState();
+  expect(state.user.isLoggedIn).toBe(false);
+  expect(state.admin.isLoggedIn).toBe(false);
 });

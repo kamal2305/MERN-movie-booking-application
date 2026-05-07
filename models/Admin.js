@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const mongo = require ("mongoose");
 
 
 

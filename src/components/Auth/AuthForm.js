@@ -6,9 +6,9 @@ const labelStyle = {mt:1 ,mb:2}
 
 const AuthForm = ({onSubmit, isAdmin}) => {
     const [inputs, setInputs] = useState({
-        name: " ",
-        email: " ",
-        password: " ",
+        name: "",
+        email: "",
+        password: "",
      });
     const [isSignup, setisSignup] = useState(false);
     const handleChange = (e) => {
@@ -27,7 +27,7 @@ const AuthForm = ({onSubmit, isAdmin}) => {
     return (
         <Dialog PaperProps={{style:{borderRadius:20}}} open={true}>
             <Box sx={{ ml: "auto", padding: 1 }} >
-                <IconButton>
+                <IconButton onClick={() => window.history.back()}>
                     <CloseRoundedIcon />
                 </IconButton>
             </Box> 

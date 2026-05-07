@@ -15,7 +15,7 @@ const HomePage = () => {
         
       <Box width={'100%'} height="100%" margin="auto" marginTop={2}>
           <Box margin={"auto"} width="80%" height={"40vh"} padding={2}>
-              <img src='https://i0.wp.com/www.technicalsanatan.com/wp-content/uploads/2023/02/Brahmastra-full-movie-download.webp?fit=1280%2C720&ssl=1' alt='Brahmastra'
+              <img src='https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1280&auto=format&fit=crop&q=60' alt='Cinema'
               
                   width={"100%"}
                   height={"100%"}
@@ -30,7 +30,7 @@ const HomePage = () => {
             <Box sx={{ display: 'flex', width: "100%", flexDirection: 'row', alignItems: 'center', justifyContent: "center", flexWrap: "wrap" }}>
             
                 {movies && movies.slice(0,4).map((movie, index) => <MovieItem
-                    id={movie.id}
+                    id={movie._id}
                     title={movie.title}
                     posterUrl={movie.posterUrl}
                     releaseDate={movie.releaseDate}

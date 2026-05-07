@@ -9,7 +9,7 @@ userRouter.post("/signup", signup);
 userRouter.put("/:id", updateUser);
 userRouter.delete("/:id", deleteUser);
 userRouter.post("/login", login);
-userRouter.get("bookings/:id", getBookingsofUser); 
+userRouter.get("/bookings/:id", getBookingsofUser); 
 
 
 module.exports = userRouter;      

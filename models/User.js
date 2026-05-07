@@ -16,7 +16,7 @@ const userSchema = new Schema({
         required: true,
         minlength: 6,
     },
-    bookings: [{ type: mongoose.Types.ObjectId , ref: "bookings"}],
+    bookings: [{ type: mongoose.Types.ObjectId , ref: "Booking"}],
 });
 const User = mongoose.model('User', userSchema);
 

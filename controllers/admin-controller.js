@@ -4,6 +4,9 @@ const jwt = require( "jsonwebtoken");
 
 const addAdmin = async (req, res, next) => {
     const { email, password } = req.body;
+    if (!email || !email.trim() || !password || !password.trim()) {
+        return res.status(422).json({ message: "Invalid Input data" });
+    }
     
     let existingAdmin;
     try {
@@ -26,14 +29,14 @@ const addAdmin = async (req, res, next) => {
         return next(err);
     }
     if (!admin) { 
-        return request.status(500).json({ message: "Unable to create/store admin" })   
+        return res.status(500).json({ message: "Unable to create/store admin" })   
     }
     return res.status(201).json({ message: "Admin created successfully" });
 };
 
 const adminLogin = async (req, res, next) => {
     const { email, password } = req.body;
-    if (!email && email.trim() === "" && !password && password.trim() === "") {
+    if (!email || !email.trim() || !password || !password.trim()) {
         return res.status(422).json({ message: "Invalid Input data" });
     }
     let existingAdmin;
@@ -60,28 +63,28 @@ const adminLogin = async (req, res, next) => {
 const getAdmins = async (req, res, next) => {
     let admins;
     try {
-        admins = await Admin.find();
+        admins = await Admin.find().select("-password");
     }
     catch (err) { 
         return next(err);
     }
-    if (!admins) {
-        return res.status(500).json({ message: "Unable to get admins" });
+    if (!admins || admins.length === 0) {
+        return res.status(404).json({ message: "No Admins Found" });
     }
-    return res.status(200).json(admins);
+    return res.status(200).json({ admins });
     
 }
 const getAdminByID = async (req, res, next) => {
     const id = req.params.id;
     let admin;
     try {
-        admin = await Admin.findById(id).populate("addedMovies");
+        admin = await Admin.findById(id).populate("addedMovies").select("-password");
     } catch (err) {
-        return console.error(err);
+        return next(err);
     }
     
     if (!admin) {
-        return console.log("Cannot find Admin");
+        return res.status(404).json({ message: "Cannot find Admin" });
         
     }
     

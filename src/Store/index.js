@@ -3,29 +3,29 @@ import { configureStore, createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        isLoggedIn:false
+        isLoggedIn: !!localStorage.getItem("userId")
     },
     reducers: {
         login(state) {
             state.isLoggedIn = true;
-         },
+        },
         logout(state) {
             localStorage.removeItem("userId");
             state.isLoggedIn = false;
-         },
+        },
     },
 })
 const adminSlice = createSlice({
     name: 'auth',
     initialState: {
-        isLoggedIn:false
+        isLoggedIn: !!localStorage.getItem("adminId")
     },
     reducers: {
         login(state) {
-            state.isLoggedIn = false;
+            state.isLoggedIn = true;
         },
         logout(state) {
-            localStorage.removeItem("admiinId");
+            localStorage.removeItem("adminId");
             localStorage.removeItem("token");
             state.isLoggedIn = false;
         },

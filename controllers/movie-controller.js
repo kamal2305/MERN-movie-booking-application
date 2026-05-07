@@ -1,36 +1,12 @@
 const jwt = require ("jsonwebtoken");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const Admin = require("../models/Admin");
 const Movie = require ("../models/Movie");
 const addMovie = async (req, res, next) => {
-    const extractedToken = req.headers.authorization.split(" ")[1];
-    
-    if (!extractedToken && extractedToken.trim() === "") {
-        return res.status(401).json({
-            message: 'No token provided',
-        });
-    }
-    let adminId;
-    //verify token
-    
-    jwt.verify(extractedToken, process.env.SECRET_KEY, (err, decrypted) => {
-        if (err) {
-            return res.status(401).json({
-                message: 'Invalid token',
-            });
-        }
-        else {
-            adminId = decrypted.id;
-            return;
-        }
-    });
-    
-    //create a new movie{
+    const adminId = req.adminId;
     
     const { title, description, releaseDate, posterUrl, featured, actors } = req.body;
-    if (!title && title.trim() === "" && !description && description.trim() === "" &&!posterUrl && posterUrl.trim() === " "
-    )
-    {
+    if (!title || !title.trim() || !description || !description.trim() || !releaseDate || !posterUrl || !posterUrl.trim()) {
         return res.status(422).json({ message: "Invalid Inputs" });
     }
     
@@ -46,19 +22,17 @@ const addMovie = async (req, res, next) => {
             posterUrl,
             
         });
-        
-        const session = await mongoose.startSession();
         const adminUser = await Admin.findById(adminId);
-        session.startTransaction();
-        await movie.save({ session });
+        if (!adminUser) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+        await movie.save();
         adminUser.addedMovies.push(movie);
-        await adminUser.save({ session });
-        
-        await session.commitTransaction();
+        await adminUser.save();
         
      }
     catch (error) { 
-     return console.log(error);   
+        return next(error);   
     }
     if (!movie) {
         return res.status(500).json({
@@ -75,7 +49,7 @@ const getAllMovies = async (req, res, next) => {
         movies = await Movie.find();
     }
     catch (err) {
-        return console.log(err);
+        return next(err);
     }
     if (!movies){
      
@@ -87,18 +61,18 @@ const getAllMovies = async (req, res, next) => {
 }
 const getMovieById = async (req, res, next) => { 
     const id = req.params.id;
-    let movies;
+    let movie;
     try {
-        movies = await Movie.findById(id);
+        movie = await Movie.findById(id);
     } catch (err) { 
-        return console.log(err);
+        return next(err);
     }
-    if (!movies){
+    if (!movie){
         return res.status(500).json({
             message: 'Something went wrong',
         });
     }
-    return res.status(200).json({movies});
+    return res.status(200).json({movie});
     
 }
 

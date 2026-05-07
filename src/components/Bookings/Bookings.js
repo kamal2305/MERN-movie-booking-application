@@ -1,12 +1,13 @@
 import { Box, Button, FormLabel, TextField, Typography } from '@mui/material';
 import React, { Fragment, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getMovieDetails, newBooking } from '../../api-helpers/api-helpers';
 
 const Bookings = () => {
     const [movie, setMovie] = useState();
     const [inputs, setInputs] = useState({ seatNumber: "", date: "" });
 
+    const navigate = useNavigate();
     const id = useParams().id;
     console.log(id);
     useEffect(() => {
@@ -20,9 +21,20 @@ const Bookings = () => {
     };
     const handleSubmit = (e) => {
         e.preventDefault();
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            alert("Please login first");
+            return;
+        }
         console.log(inputs);
-        newBooking({ ...inputs, movie: movie._id }).then((res) => console.log(res)).catch((err) => console.log(err));
-
+        newBooking({ ...inputs, movie: movie._id, user: userId }).then((res) => {
+            console.log(res);
+            alert("Booking successful!");
+            navigate("/user");
+        }).catch((err) => {
+            console.log(err);
+            alert("Booking failed: " + (err.response?.data?.message || err.message));
+        });
     }
     return (
         <div>

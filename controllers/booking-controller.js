@@ -1,68 +1,59 @@
-const Bookings = require("../models/Booking");
+const Booking = require("../models/Booking");
 const User = require("../models/User");
 const Movie = require("../models/Movie");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const newBooking = async (req, res, next) => {
     const { movie, date, seatNumber, user } = req.body;
-    
+
     let existingMovie;
     let existingUser;
-    
+    let booking;
+
     try {
         existingMovie = await Movie.findById(movie);
         existingUser = await User.findById(user);
+    } catch (err) {
+        return next(err);
     }
-    catch (err) { 
-       return console.log(err)
-    }
+
     if (!existingMovie) {
-        return res.status(400).json({ message: "Movie not found by given id" });
+        return res.status(404).json({ message: "Movie not found by given id" });
     }
-    if (!existingUser) { 
+
+    if (!existingUser) {
         return res.status(404).json({ message: "User not found by given id" });
     }
-    
-    let booking;
+
     try {
-       
-        booking = new Bookings({
+        booking = new Booking({
             movie,
             date: new Date(`${date}`),
             seatNumber,
             user,
         });
-        
-        const session = await mongoose.startSession();
-        session.startTransaction();
+
+        await booking.save();
         existingUser.bookings.push(booking);
         existingMovie.bookings.push(booking);
-        
-        await existingUser.save({ session });
-        await existingMovie.save({ session });
-        await Booking.save({ session });
-        
-        session.commitTransaction();
-        
-        
-        booking = await booking.save();
+
+        await existingUser.save();
+        await existingMovie.save();
+
+    } catch (error) {
+        return next(error);
     }
-    catch (error) {
-        console.log(error)
-    }
-    if (!booking) {
-        return res.status(400).json({ message: "Something went wrong to create booking" });
-    }
-return res.status(201).json({Bookings: booking})
-    
+
+    return res.status(201).json({ booking });
 };
 
 const getBookById = async (req, res, next) => { 
-    const { id } = req.params.id;
+    const { id } = req.params;
+    let booking;
     try {
-        const booking = await Booking.findById(id);
+        booking = await Booking.findById(id).populate("movie user");
     }
     catch (err) {
-        return res.status(500).json({ message: err.message });
+        return next(err);
     }
     if (!booking) {
         return res.status(404).json({ message: "Booking not found by given id" });
@@ -71,24 +62,20 @@ const getBookById = async (req, res, next) => {
 }
 const deleteBooking = async (req, res, next) => {
     const id = req.params.id;
-    let booking;
     try {
-        booking = await Bookings.findByIdAndRemove(id).populate("user movie");
-        console.log(booking);
-        const session = await mongoose.startSession();
-        session.startTransaction();
-       await booking.user.bookings.pull(booking);
-       await booking.movie.bookings.pull(booking);
+        booking = await Booking.findById(id).populate("user movie");
+        if (!booking) {
+            return res.status(404).json({ message: "Booking not found by given id" });
+        }
+        booking.user.bookings.pull(booking._id);
+        booking.movie.bookings.pull(booking._id);
         
-        await booking.movie.save({ session });
-        await booking.user.save({ session });
-        session.commitTransaction(); 
+        await booking.movie.save();
+        await booking.user.save();
+        await booking.deleteOne();
     }
     catch (err) {
-        return console.error(err);
-    }
-    if (!booking) {
-        return res.status(404).json({ message: "Booking not found by given id" });
+        return next(err);
     }
     return res.status(200).json({ message: "Booking deleted successfully" });
 }

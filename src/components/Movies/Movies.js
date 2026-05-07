@@ -4,9 +4,20 @@ import { getAllMovies } from '../../api-helpers/api-helpers';
 import MovieItem from './MovieItem';
 
 const Movies = () => {
-  const [movies, setMovies] = useState();
+  const [movies, setMovies] = useState([]);
   useEffect(() => {
-    getAllMovies().then((data)=>setMovies(data.movies)).catch(err=>console.log(err));
+    getAllMovies()
+      .then((data) => {
+        if (data && data.movies) {
+          setMovies(data.movies);
+        } else {
+          setMovies([]);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        setMovies([]);
+      });
   }, [])
   return <Box margin={'auto'} marginTop={4}>
     <Typography variant='h4'
