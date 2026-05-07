@@ -1,70 +1,88 @@
-# Getting Started with Create React App
+# MERN Movie Booking Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Lightweight movie-ticket booking web application built with MongoDB, Express, React and Node (MERN). This repository contains the API (Express + MongoDB) and the React frontend for browsing movies, creating bookings, and managing users/admins.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Browse and search movies
+- Add movies (admin)
+- User authentication and profiles
+- Create and view bookings
+- Simple admin dashboard
 
-### `npm start`
+## Tech stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Frontend: React (Create React App)
+- Backend: Node.js, Express
+- Database: MongoDB (Mongoose)
+- Authentication: JWT
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Prerequisites
 
-### `npm test`
+- Node.js v16+ and npm
+- MongoDB (local or Atlas)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Quick start
 
-### `npm run build`
+1. Install dependencies
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Create a `.env` file in the project root with the following (example):
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/moviedb
+JWT_SECRET=your_jwt_secret
+```
 
-### `npm run eject`
+3. Seed sample data (optional)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+node scripts/seed.js
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. Run the app
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm run dev
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+By default the frontend runs on port 3000 and the backend on port 5000. Adjust `package.json` scripts or proxy settings as needed.
 
-## Learn More
+## Scripts
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `npm start` — run production build
+- `npm run build` — build frontend into `build/`
+- `npm run dev` — start backend and frontend in development (project-specific script)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## API (quick reference)
 
-### Code Splitting
+- `GET /api/movies` — list movies
+- `GET /api/movies/:id` — movie details
+- `POST /api/bookings` — create booking (auth)
+- `GET /api/bookings` — list bookings (auth)
+- `POST /api/users/login` — user login
+- `POST /api/users/register` — user registration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+See the `routes/` folder for complete endpoints and `controllers/` for implementation.
 
-### Analyzing the Bundle Size
+## Project structure (high level)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- `app.js` — Express app entry
+- `controllers/` — route handlers
+- `models/` — Mongoose models
+- `routes/` — route definitions
+- `scripts/seed.js` — seed sample data
+- `src/` — React frontend source
+- `build/` — production frontend build
 
-### Making a Progressive Web App
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Feel free to open issues or submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
 
-### Advanced Configuration
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT
